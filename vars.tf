@@ -8,4 +8,4 @@ variable "max_size" {}
 variable "min_size" {}
 variable "desired_capacity" {}
 variable "instance_type" {}
-variable "bastian_cidr" {}
+variable "bastion_cidr" {}
