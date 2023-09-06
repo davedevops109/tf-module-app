@@ -104,10 +104,7 @@ resource "aws_launch_template" "main" {
   iam_instance_profile {
     arn = aws_iam_instance_profile.profile.arn
   }
-  user_data = <<-EOT
-    labauto ansible
-    ansible-pull -i localhost, -U https://www.github.com/davedevops109/roboshop-ansible roboshop.yml -e ROLE_NAME=${var.component} -e env=${var.env} | tee /opt/ansible.log
-  EOT
+  user_data = base64decode(templatefile("$(path.module)/user-data.sh", {component = var.component, env=var.env}))
 }
 
 
