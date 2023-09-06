@@ -96,6 +96,14 @@ resource "aws_security_group" "main" {
   )
 }
 
+data "aws_launch_template" "test" {
+  template = file("${path.module}/user_data.sh")
+  vars = {
+    component = var.component
+    env       = var.env
+  }
+}
+
 resource "aws_launch_template" "main" {
   name_prefix   = "${var.env}-${var.component}-template"
   image_id      = data.aws_ami.centos8.id
@@ -104,7 +112,14 @@ resource "aws_launch_template" "main" {
   iam_instance_profile {
     arn = aws_iam_instance_profile.profile.arn
   }
+  user_data = <<-EOT
+    labauto ansible
+    ansible-pull -i localhost, -U https://www.github.com/davedevops109/roboshop-ansible roboshop.yml -e ROLE_NAME=${var.component} -e env=${var.env} | tee /opt/ansible.log
+  EOT
 }
+
+
+
 
 #resource "aws_autoscaling_group" "asg" {
 #  name                      = "${var.env}-${var.component}-asg"
