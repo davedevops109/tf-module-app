@@ -96,14 +96,6 @@ resource "aws_security_group" "main" {
   )
 }
 
-data "aws_launch_template" "test" {
-  template = file("${path.module}/user_data.sh")
-  vars = {
-    component = var.component
-    env       = var.env
-  }
-}
-
 resource "aws_launch_template" "main" {
   name_prefix   = "${var.env}-${var.component}-template"
   image_id      = data.aws_ami.centos8.id
