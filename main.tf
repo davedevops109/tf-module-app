@@ -138,3 +138,11 @@ resource "aws_autoscaling_group" "asg" {
   }
 }
 
+resource "aws_route53_record" "app" {
+  zone_id = "Z03010752AFABDTOSLK9H"
+  name    = "${var.component}-${var.env}.davedevops.tech"
+  type    = "CNAME"
+  ttl     = 30
+  records = [var.alb]
+}
+
